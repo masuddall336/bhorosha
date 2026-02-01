@@ -2,6 +2,7 @@ import React, { use } from 'react';
 import { NavLink } from 'react-router';
 import logo from '../../../public/bhorosha.png'
 import { AuthContext } from '../../context/AuthContext';
+import Swal from 'sweetalert2';
 
 const Signup = () => {
   const { creatUser } = use(AuthContext);
@@ -11,8 +12,8 @@ const Signup = () => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-    const { email, password, ...userProfile } = Object.fromEntries(formData.entries());
-    console.log(email, password, userProfile);
+    const { email, password, ...rest } = Object.fromEntries(formData.entries());
+    // console.log(email, password, userProfile);
 
 
 
@@ -27,7 +28,14 @@ const Signup = () => {
       .then(rasult => {
         console.log(rasult.user);
 
-       return fetch('http://localhost:3000/users', {
+        const userProfile = {
+          email,
+          ...rest,
+          creationTime: rasult.user?.metadata?.creationTime,
+          lastSignInTime: rasult.user?.metadata?.lastSignInTime
+        }
+
+        return fetch('http://localhost:3000/users', {
           method: "POST",
           headers: {
             "Content-type": 'application/json'
@@ -35,7 +43,17 @@ const Signup = () => {
           body: JSON.stringify(userProfile)
         })
           .then(res => res.json())
-          .then(data => console.log("after send databatch", data)
+          .then(data => {
+            if (data.insertedId) {
+              Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Successfully LogedIn",
+                showConfirmButton: false,
+                timer: 1500
+              });
+            }
+          }
           )
 
       })

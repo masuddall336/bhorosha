@@ -5,12 +5,13 @@ import { MdOutlineFolderDelete } from "react-icons/md";
 
 import './justForYou.css'
 import Swal from "sweetalert2";
+import { useState } from "react";
 
 
 const JustForYou = ({ products, serverData, setServerData }) => {
-  const { url, _id, short_name, present_price, previous_price,  parcentage } = products;
+  const { url, _id, short_name, long_name, catagory, description, present_price, previous_price, discount, parcentage } = products;
 
-
+  // const [products, setProducts] = useState(products);
 
 
   const handleDelet = (_id) => {
@@ -39,8 +40,8 @@ const JustForYou = ({ products, serverData, setServerData }) => {
                 text: "Your Product has been deleted.",
                 icon: "success"
               });
-              const remainingProducts = serverData.filter(single_products => single_products._id !== _id);
-              setServerData(remainingProducts);
+              const remainingProducts = serverData.filter(single_products=> single_products._id !== _id);
+              setServerData(remainingProducts)
             }
           })
 

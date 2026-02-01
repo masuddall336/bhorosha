@@ -105,6 +105,7 @@ const Navbar = () => {
             </nav>
             {/* Login */}
             <div className='flex gap-3'>
+                <NavLink to='/users' className=' signUp' href="">Users</NavLink>
                 <NavLink to='/signUp' className=' signUp' href="">Sign Up</NavLink>
                 <NavLink to='/signIn' className=' login' href="">Login</NavLink>
             </div>

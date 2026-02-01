@@ -8,6 +8,7 @@ import ProductDetails from "./product_details/ProductDetails";
 import Update from "./product_details/update/Update";
 import Signup from "./pages/signin and signup/Signup";
 import Signin from "./pages/signin and signup/Signin";
+import Users from "./pages/Users/Users";
 
 let router = createBrowserRouter([
     {
@@ -38,6 +39,11 @@ let router = createBrowserRouter([
             {
                 path: '/signIn',
                 Component: Signin
+            },
+            {
+                path: '/users',
+                loader: ()=> fetch('http://localhost:3000/users'),
+                Component: Users
             }
 
         ]

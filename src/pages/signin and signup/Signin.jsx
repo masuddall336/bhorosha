@@ -1,8 +1,44 @@
-import React from 'react';
+import React, { use } from 'react';
 import { NavLink } from 'react-router';
 import logo from '../../../public/bhorosha.png'
+import { AuthContext } from '../../context/AuthContext';
+import { log } from 'firebase/firestore/lite/pipelines';
 
 const Signin = () => {
+  const { signInUser } = use(AuthContext)
+  const handleSignIn = e => {
+    e.preventDefault();
+    const form = e.target;
+    const email = form.email.value;
+    const password = form.password.value;
+    console.log(email, password);
+
+    // Send data to server
+    signInUser(email, password)
+      .then(rasult => {
+        console.log(rasult.user);
+        const signInInfo = {
+          email,
+          lastSignInTime: rasult.user?.metadata?.lastSignInTime
+        }
+        fetch('http://localhost:3000/users', {
+          method: "PATCH",
+          headers: {
+            "Content-type": "application/json"
+          },
+          body: JSON.stringify(signInInfo)
+        })
+          .then(res => res.json())
+          .then(data => console.log("data after patch", data)
+          )
+
+      })
+      .catch(error => {
+        console.log(error);
+
+      })
+
+  }
   return (
     <div className='bg-[#101828]'>
       <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
@@ -12,7 +48,7 @@ const Signin = () => {
         </div>
 
         <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action="#" method="POST" class="space-y-6">
+          <form onSubmit={handleSignIn} method="POST" class="space-y-6">
             <div>
               <label for="email" class="block text-sm/6 font-medium text-gray-100">Email address</label>
               <div class="mt-2">
