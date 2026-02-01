@@ -5,26 +5,45 @@ import { AuthContext } from '../../context/AuthContext';
 
 const Signup = () => {
   const { creatUser } = use(AuthContext);
-  console.log(creatUser);
+  // console.log(creatUser);
 
   const signUp = (e) => {
     e.preventDefault();
     const form = e.target;
     const formData = new FormData(form);
-    const email = formData.get('email');
-    const password = formData.get('password');
-    console.log(email, password);
+    const { email, password, ...userProfile } = Object.fromEntries(formData.entries());
+    console.log(email, password, userProfile);
+
+
+
+    // const email = formData.get('email');
+    // const password = formData.get('password');
+    // console.log(email, password, userProfile);
+
+
+
 
     creatUser(email, password)
-    .then(rasult =>{
-      console.log(rasult);
-      
-    })
-    .catch(error=>{
-      console.log(error);
-      
-    })
-    
+      .then(rasult => {
+        console.log(rasult.user);
+
+       return fetch('http://localhost:3000/users', {
+          method: "POST",
+          headers: {
+            "Content-type": 'application/json'
+          },
+          body: JSON.stringify(userProfile)
+        })
+          .then(res => res.json())
+          .then(data => console.log("after send databatch", data)
+          )
+
+      })
+      .catch(error => {
+        console.log(error);
+
+      })
+
   }
 
   return (
@@ -38,11 +57,30 @@ const Signup = () => {
         <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form onSubmit={signUp} method="POST" class="space-y-6">
             <div>
+              <label for="name" class="block text-sm/6 font-medium text-gray-100">Name:</label>
+              <div class="mt-2">
+                <input id="name" type="text" name="name" required autocomplete="name" class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+              </div>
+            </div>
+            <div>
+              <label for="address" class="block text-sm/6 font-medium text-gray-100">Address:</label>
+              <div class="mt-2">
+                <input id="address" type="text" name="address" required autocomplete="address" class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+              </div>
+            </div>
+            <div>
+              <label for="profile_picture" class="block text-sm/6 font-medium text-gray-100">Profile Picture:</label>
+              <div class="mt-2">
+                <input id="profile_picture" type="text" name="profile_picture" required autocomplete="email" class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+              </div>
+            </div>
+            <div>
               <label for="email" class="block text-sm/6 font-medium text-gray-100">Email address</label>
               <div class="mt-2">
                 <input id="email" type="email" name="email" required autocomplete="email" class="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
               </div>
             </div>
+
 
             <div>
               <div class="flex items-center justify-between">
